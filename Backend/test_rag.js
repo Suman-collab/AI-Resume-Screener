@@ -8,20 +8,19 @@ async function test() {
   const resumeText = "John Doe, Software Engineer, React, Node.js, MongoDB, 3 years experience";
   const jobDesc = "Looking for a React developer with Node.js experience";
 
-  const tempFilePath = path.join(os.tmpdir(), `resume_test_${Date.now()}.txt`);
-  fs.writeFileSync(tempFilePath, resumeText, 'utf8');
+  const tempFilePath = path.join(__dirname, '../Resume/Suman_Panda_Resume_OnePage.pdf');
 
   const formData = new FormData();
   formData.append('resume', fs.createReadStream(tempFilePath), {
-    filename: 'resume.txt',
-    contentType: 'text/plain',
+    filename: 'Suman_Panda_Resume_OnePage.pdf',
+    contentType: 'application/pdf',
   });
   formData.append('jd_data', jobDesc);
 
   try {
     console.log('Sending request to RAG API...');
     const response = await axios.post(
-      'http://127.0.0.1:8000/analyze_resume',
+      'https://resume-analyzer-qs2w.onrender.com/analyze_resume',
       formData,
       { headers: { ...formData.getHeaders() }, timeout: 60000 }
     );
@@ -33,7 +32,7 @@ async function test() {
       console.error('Request Error:', error.message);
     }
   } finally {
-    if (fs.existsSync(tempFilePath)) fs.unlinkSync(tempFilePath);
+    // don't delete real file
   }
 }
 
