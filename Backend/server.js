@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
   res.send('ATS Resume Analyzer API is running...');
 });
 
-app.get("/helath",(req,res)=>{
+app.get("/api/helath",(req,res)=>{
   res.send("Fine")
 })
 // Error handling middleware
