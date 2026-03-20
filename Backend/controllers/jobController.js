@@ -190,7 +190,12 @@ const analyzeResumes = async (req, res) => {
       // Assuming app.resume contains the raw text for the RAG API, 
       // or at least enough info to send.
       try {
-        const response = await axios.post(process.env.RAG_API_URL || 'http://127.0.0.1:8000/analyze_resume', {
+        const baseOrFullUrl = process.env.RAG_API_URL || 'http://127.0.0.1:8000/analyze_resume';
+        const targetUrl = baseOrFullUrl.includes('/analyze_resume') 
+          ? baseOrFullUrl 
+          : `${baseOrFullUrl.replace(/\/$/, '')}/analyze_resume`;
+
+        const response = await axios.post(targetUrl, {
           resume: app.resume,
           job_description: job.description
         });

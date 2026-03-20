@@ -53,8 +53,13 @@ const enrichRAGResponse = (data) => {
 };
 
 const analyzeResumeText = async (resume, jobDescription) => {
+  const baseOrFullUrl = process.env.RAG_API_URL || 'http://127.0.0.1:8000/analyze_resume';
+  const targetUrl = baseOrFullUrl.includes('/analyze_resume') 
+    ? baseOrFullUrl 
+    : `${baseOrFullUrl.replace(/\/$/, '')}/analyze_resume`;
+
   const response = await axios.post(
-    process.env.RAG_API_URL || 'http://127.0.0.1:8000/analyze_resume',
+    targetUrl,
     {
       resume,
       job_description: jobDescription,
@@ -72,8 +77,13 @@ const analyzeResumeFile = async (tempPath, file, jobDescription) => {
   });
   formData.append('jd_data', jobDescription);
 
+  const baseOrFullUrl = process.env.RAG_API_URL || 'http://127.0.0.1:8000/analyze_resume';
+  const targetUrl = baseOrFullUrl.includes('/analyze_resume') 
+    ? baseOrFullUrl 
+    : `${baseOrFullUrl.replace(/\/$/, '')}/analyze_resume`;
+
   const response = await axios.post(
-    process.env.RAG_API_URL || 'http://127.0.0.1:8000/analyze_resume',
+    targetUrl,
     formData,
     {
       headers: formData.getHeaders(),

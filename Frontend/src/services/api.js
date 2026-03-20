@@ -1,7 +1,12 @@
 import axios from 'axios';
 import { getStoredUser } from '../utils/authStorage';
 
-const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://ai-resume-screener-nw47.vercel.app/api' : '/api');
+let API_URL = import.meta.env.VITE_API_URL;
+if (!API_URL) {
+  API_URL = import.meta.env.PROD ? 'https://ai-resume-screener-nw47.vercel.app/api' : '/api';
+} else if (API_URL !== '/api' && !API_URL.endsWith('/api')) {
+  API_URL = `${API_URL.replace(/\/$/, '')}/api`;
+}
 
 // Create an axios instance
 const api = axios.create({
