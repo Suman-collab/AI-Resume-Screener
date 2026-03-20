@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState, useContext } from 'react';
 import { loginAPI, registerAPI, googleAuthAPI, getProfileAPI, guestAuthAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
+import { getAuthHomePath } from '../utils/authRoutes';
 
 const AuthContext = createContext();
 
@@ -74,12 +75,7 @@ export const AuthProvider = ({ children }) => {
   const completeAuth = (authData) => {
     localStorage.setItem('userInfo', JSON.stringify(authData));
     setUser(authData);
-
-    if (authData.role === 'hr') {
-      navigate('/hr/dashboard');
-    } else {
-      navigate('/user/dashboard');
-    }
+    navigate(getAuthHomePath(authData));
   };
 
   const login = async (email, password) => {
@@ -138,10 +134,11 @@ export const AuthProvider = ({ children }) => {
 
   const isAuthenticated = Boolean(user?.token);
   const isHR = user?.role === 'hr';
+  const isGuest = Boolean(user?.isGuest);
 
   return (
     <AuthContext.Provider
-      value={{ user, login, register, googleAuth, loginAsGuest, logout, loading, isAuthenticated, isHR }}
+      value={{ user, login, register, googleAuth, loginAsGuest, logout, loading, isAuthenticated, isHR, isGuest }}
     >
       {!loading && children}
     </AuthContext.Provider>

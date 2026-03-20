@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 const normalizeRole = (role) => {
   if (typeof role !== 'string') {
@@ -26,6 +27,15 @@ const formatAuthResponse = (user) => ({
   avatar: user.avatar,
   token: generateToken(user._id),
 });
+
+const createGuestIdentity = () => {
+  const guestId = `${Date.now()}-${crypto.randomBytes(4).toString('hex')}`;
+
+  return {
+    name: 'Guest User',
+    email: `guest+${guestId}@guest.local`,
+  };
+};
 
 const verifyGoogleCredential = async (credential) => {
   const { data } = await axios.get('https://oauth2.googleapis.com/tokeninfo', {
@@ -108,6 +118,23 @@ const loginUser = async (req, res) => {
   res.json(formatAuthResponse(user));
 };
 
+// @desc    Continue as guest
+// @route   POST /api/auth/guest
+// @access  Public
+const guestAuth = async (_req, res) => {
+  const guestIdentity = createGuestIdentity();
+
+  const guestUser = await User.create({
+    ...guestIdentity,
+    role: 'user',
+  });
+
+  return res.status(201).json({
+    ...formatAuthResponse(guestUser),
+    isGuest: true,
+  });
+};
+
 // @desc    Authenticate or register with Google
 // @route   POST /api/auth/google
 // @access  Public
@@ -168,6 +195,7 @@ const getUserProfile = async (req, res) => {
 module.exports = {
   registerUser,
   loginUser,
+  guestAuth,
   googleAuth,
   getUserProfile,
 };

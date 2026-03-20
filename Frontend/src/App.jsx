@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { getAuthHomePath } from './utils/authRoutes';
 
 // Public Pages
 import Login from './pages/public/Login';
@@ -26,21 +27,21 @@ import ApplicantsList from './pages/hr/ApplicantsList';
 import ResumeRanking from './pages/hr/ResumeRanking';
 
 const PublicRoute = ({ children }) => {
-  const { loading, isAuthenticated, isHR } = useAuth();
+  const { loading, isAuthenticated, user } = useAuth();
 
   if (loading) {
     return null;
   }
 
   if (isAuthenticated) {
-    return <Navigate to={isHR ? '/hr/dashboard' : '/user/dashboard'} replace />;
+    return <Navigate to={getAuthHomePath(user)} replace />;
   }
 
   return children;
 };
 
 const RootRedirect = () => {
-  const { loading, isAuthenticated, isHR } = useAuth();
+  const { loading, isAuthenticated, user } = useAuth();
 
   if (loading) {
     return null;
@@ -50,11 +51,11 @@ const RootRedirect = () => {
     return <Navigate to="/login" replace />;
   }
 
-  return <Navigate to={isHR ? '/hr/dashboard' : '/user/dashboard'} replace />;
+  return <Navigate to={getAuthHomePath(user)} replace />;
 };
 
 const ProtectedRoute = ({ children, role }) => {
-  const { loading, isAuthenticated, isHR } = useAuth();
+  const { loading, isAuthenticated, isHR, user } = useAuth();
 
   if (loading) {
     return null;
@@ -65,7 +66,7 @@ const ProtectedRoute = ({ children, role }) => {
   }
 
   if (role === 'hr' && !isHR) {
-    return <Navigate to="/user/dashboard" replace />;
+    return <Navigate to={getAuthHomePath(user)} replace />;
   }
 
   if (role === 'user' && isHR) {

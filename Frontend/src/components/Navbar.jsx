@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { BrainCircuit, BriefcaseBusiness, LogOut, Menu, Sparkles, UserCircle2, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { getAuthHomePath } from '../utils/authRoutes';
 
 const Navbar = () => {
-  const { user, logout, isAuthenticated, isHR } = useAuth();
+  const { user, logout, isAuthenticated, isHR, isGuest } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -14,7 +15,7 @@ const Navbar = () => {
 
   const hiddenPaths = ['/login', '/signup', '/user/ask-doubt', '/user/analyze-resume'];
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
-  const homePath = isAuthenticated ? (isHR ? '/hr/dashboard' : '/user/dashboard') : '/login';
+  const homePath = isAuthenticated ? getAuthHomePath(user) : '/login';
 
   if (hiddenPaths.includes(location.pathname)) {
     return null;
@@ -103,7 +104,7 @@ const Navbar = () => {
                 </div>
                 <div className="flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 text-amber-700 ring-1 ring-amber-100">
                   <UserCircle2 className="h-4 w-4" />
-                  <span className="text-sm font-semibold">{isHR ? 'Recruiter' : 'Candidate'}</span>
+                  <span className="text-sm font-semibold">{isHR ? 'Recruiter' : isGuest ? 'Guest' : 'Candidate'}</span>
                 </div>
                 <button
                   onClick={logout}
