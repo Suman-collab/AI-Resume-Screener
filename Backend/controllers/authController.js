@@ -25,6 +25,7 @@ const formatAuthResponse = (user) => ({
   email: user.email,
   role: user.role,
   avatar: user.avatar,
+  isGuest: Boolean(user.isGuest),
   token: generateToken(user._id),
 });
 
@@ -127,12 +128,10 @@ const guestAuth = async (_req, res) => {
   const guestUser = await User.create({
     ...guestIdentity,
     role: 'user',
-  });
-
-  return res.status(201).json({
-    ...formatAuthResponse(guestUser),
     isGuest: true,
   });
+
+  return res.status(201).json(formatAuthResponse(guestUser));
 };
 
 // @desc    Authenticate or register with Google

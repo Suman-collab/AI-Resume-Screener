@@ -14,13 +14,13 @@ const {
   getUserApplications,
   getUserApplicationById
 } = require('../controllers/userController');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, registeredUsersOnly } = require('../middleware/authMiddleware');
 
-router.post('/apply/:jobId', protect, upload.single('resume'), applyToJob);
-router.post('/analyze-resume', protect, analyzeResume);
+router.post('/apply/:jobId', protect, registeredUsersOnly, upload.single('resume'), applyToJob);
+router.post('/analyze-resume', protect, registeredUsersOnly, analyzeResume);
 router.post('/analyze-direct', protect, upload.single('resume'), analyzeResumeDirect);
-router.post('/assistant', protect, assistantChat);
-router.get('/applications', protect, getUserApplications);
-router.get('/applications/:id', protect, getUserApplicationById);
+router.post('/assistant', protect, registeredUsersOnly, assistantChat);
+router.get('/applications', protect, registeredUsersOnly, getUserApplications);
+router.get('/applications/:id', protect, registeredUsersOnly, getUserApplicationById);
 
 module.exports = router;

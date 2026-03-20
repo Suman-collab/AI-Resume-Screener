@@ -8,7 +8,7 @@ import { getJobDetailsAPI } from '../../services/api';
 const JobDetails = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isGuest } = useAuth();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -54,7 +54,7 @@ const JobDetails = () => {
     );
   }
 
-  const applyTarget = isAuthenticated ? `/user/apply/${job._id}` : '/login';
+  const applyTarget = isGuest ? '/user/analyze-resume' : isAuthenticated ? `/user/apply/${job._id}` : '/login';
 
   return (
     <div className="mx-auto max-w-6xl pb-10">
@@ -96,7 +96,7 @@ const JobDetails = () => {
               to={applyTarget}
               className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition-all hover:-translate-y-0.5 hover:bg-indigo-50 hover:text-indigo-700"
             >
-              Apply
+              {isGuest ? 'Get ATS Score' : 'Apply'}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -137,7 +137,7 @@ const JobDetails = () => {
               to={applyTarget}
               className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-indigo-600"
             >
-              Apply now
+              {isGuest ? 'Get ATS Score' : 'Apply now'}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

@@ -2,21 +2,11 @@ import React, { createContext, useEffect, useState, useContext } from 'react';
 import { loginAPI, registerAPI, googleAuthAPI, getProfileAPI, guestAuthAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import { getAuthHomePath } from '../utils/authRoutes';
+import { clearStoredUser, getStoredUser, setStoredUser } from '../utils/authStorage';
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
-
-const getStoredUser = () => {
-  try {
-    const userInfo = localStorage.getItem('userInfo');
-    return userInfo ? JSON.parse(userInfo) : null;
-  } catch (error) {
-    console.error('Failed to parse stored user info:', error);
-    localStorage.removeItem('userInfo');
-    return null;
-  }
-};
 
 const normalizeRole = (role) => {
   if (typeof role !== 'string') {
@@ -49,11 +39,11 @@ export const AuthProvider = ({ children }) => {
           token: storedUser.token,
         };
 
-        localStorage.setItem('userInfo', JSON.stringify(nextUser));
+        setStoredUser(nextUser);
         setUser(nextUser);
       } catch (error) {
         console.error('Failed to restore auth session:', error.response?.data?.message || error.message);
-        localStorage.removeItem('userInfo');
+        clearStoredUser();
         setUser(null);
       } finally {
         setLoading(false);
@@ -73,7 +63,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const completeAuth = (authData) => {
-    localStorage.setItem('userInfo', JSON.stringify(authData));
+    setStoredUser(authData);
     setUser(authData);
     navigate(getAuthHomePath(authData));
   };
@@ -127,7 +117,7 @@ export const AuthProvider = ({ children }) => {
       window.google.accounts.id.disableAutoSelect();
     }
 
-    localStorage.removeItem('userInfo');
+    clearStoredUser();
     setUser(null);
     navigate('/login');
   };

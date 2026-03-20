@@ -47,7 +47,7 @@ const getTopSkills = (jobs) => {
 };
 
 const JobListings = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isGuest } = useAuth();
   const [jobs, setJobs] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [topSkills, setTopSkills] = useState([]);
@@ -258,7 +258,11 @@ const JobListings = () => {
               .replace(/\s*\r?\n\s*/g, ' ')
               .replace(/\s{2,}/g, ' ')
               .trim();
-            const fastApplyTarget = isAuthenticated ? `/user/apply/${job._id}` : '/login';
+            const fastApplyTarget = isGuest
+              ? '/user/analyze-resume'
+              : isAuthenticated
+                ? `/user/apply/${job._id}`
+                : '/login';
 
             return (
               <div
@@ -317,7 +321,7 @@ const JobListings = () => {
                       to={fastApplyTarget}
                       className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-indigo-600"
                     >
-                      Apply
+                      {isGuest ? 'Get ATS Score' : 'Apply'}
                       <ArrowRight className="h-4 w-4" />
                     </Link>
                   </div>

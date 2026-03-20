@@ -15,7 +15,7 @@ const Navbar = () => {
 
   const hiddenPaths = ['/login', '/signup', '/user/ask-doubt', '/user/analyze-resume'];
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
-  const homePath = isAuthenticated ? getAuthHomePath(user) : '/login';
+  const homePath = isAuthenticated ? (isGuest ? '/login' : getAuthHomePath(user)) : '/login';
 
   if (hiddenPaths.includes(location.pathname)) {
     return null;
@@ -28,6 +28,10 @@ const Navbar = () => {
           { to: '/hr/manage-jobs', label: 'Manage Jobs' },
           { to: '/hr/create-job', label: 'Post Job' },
         ]
+      : isGuest
+        ? [
+            { to: '/user/analyze-resume', label: 'ATS Score' },
+          ]
       : [
           { to: '/user/dashboard', label: 'Dashboard' },
           { to: '/jobs', label: 'Jobs' },

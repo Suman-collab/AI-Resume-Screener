@@ -27,6 +27,10 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: null
+  },
+  isGuest: {
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true });
 

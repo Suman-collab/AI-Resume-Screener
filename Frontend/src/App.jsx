@@ -27,13 +27,13 @@ import ApplicantsList from './pages/hr/ApplicantsList';
 import ResumeRanking from './pages/hr/ResumeRanking';
 
 const PublicRoute = ({ children }) => {
-  const { loading, isAuthenticated, user } = useAuth();
+  const { loading, isAuthenticated, isGuest, user } = useAuth();
 
   if (loading) {
     return null;
   }
 
-  if (isAuthenticated) {
+  if (isAuthenticated && !isGuest) {
     return <Navigate to={getAuthHomePath(user)} replace />;
   }
 
@@ -41,7 +41,7 @@ const PublicRoute = ({ children }) => {
 };
 
 const RootRedirect = () => {
-  const { loading, isAuthenticated, user } = useAuth();
+  const { loading, isAuthenticated, isGuest, user } = useAuth();
 
   if (loading) {
     return null;
@@ -51,11 +51,15 @@ const RootRedirect = () => {
     return <Navigate to="/login" replace />;
   }
 
+  if (isGuest) {
+    return <Navigate to="/login" replace />;
+  }
+
   return <Navigate to={getAuthHomePath(user)} replace />;
 };
 
-const ProtectedRoute = ({ children, role }) => {
-  const { loading, isAuthenticated, isHR, user } = useAuth();
+const ProtectedRoute = ({ children, role, allowGuest = false }) => {
+  const { loading, isAuthenticated, isHR, isGuest, user } = useAuth();
 
   if (loading) {
     return null;
@@ -71,6 +75,10 @@ const ProtectedRoute = ({ children, role }) => {
 
   if (role === 'user' && isHR) {
     return <Navigate to="/hr/dashboard" replace />;
+  }
+
+  if (role === 'user' && isGuest && !allowGuest) {
+    return <Navigate to="/user/analyze-resume" replace />;
   }
 
   return children;
@@ -135,7 +143,7 @@ const AppContent = () => {
           <Route
             path="/user/analyze-resume"
             element={(
-              <ProtectedRoute role="user">
+              <ProtectedRoute role="user" allowGuest>
                 <ResumeAnalyzer />
               </ProtectedRoute>
             )}

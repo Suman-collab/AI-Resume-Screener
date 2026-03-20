@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getStoredUser } from '../utils/authStorage';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -13,12 +14,9 @@ const api = axios.create({
 // Add a request interceptor to attach the JWT token to every request
 api.interceptors.request.use(
   (config) => {
-    const userInfo = localStorage.getItem('userInfo');
-    if (userInfo) {
-      const { token } = JSON.parse(userInfo);
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+    const storedUser = getStoredUser();
+    if (storedUser?.token) {
+      config.headers.Authorization = `Bearer ${storedUser.token}`;
     }
     return config;
   },

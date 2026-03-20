@@ -11,6 +11,7 @@ import {
   X,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { analyzeResumeDirectAPI } from '../../services/api';
 
 const LIST_MARKER_REGEX = /^(\d+[\.\)]|[-*•])\s*/;
@@ -358,11 +359,21 @@ const ResultSection = ({ icon: Icon, title, subtitle, content, accentColor }) =>
 
 const ResumeAnalyzer = () => {
   const navigate = useNavigate();
+  const { isGuest, logout } = useAuth();
   const [jobDescription, setJobDescription] = useState('');
   const [resumeFile, setResumeFile] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState(null);
   const [error, setError] = useState('');
+
+  const handleBack = () => {
+    if (isGuest) {
+      logout();
+      return;
+    }
+
+    navigate(-1);
+  };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -401,7 +412,7 @@ const ResumeAnalyzer = () => {
         <div className="mb-6">
           <div className="mb-4 flex items-center gap-3">
             <button
-              onClick={() => navigate(-1)}
+              onClick={handleBack}
               className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-sm font-medium text-gray-500 shadow-sm ring-1 ring-slate-200/70 backdrop-blur-sm transition-colors hover:text-indigo-600"
             >
               <ArrowLeft className="h-4 w-4" /> Back
