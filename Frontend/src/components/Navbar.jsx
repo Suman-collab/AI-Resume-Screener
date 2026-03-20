@@ -37,11 +37,11 @@ const Navbar = () => {
           { to: '/jobs', label: 'Jobs' },
           { to: '/user/analyze-resume', label: 'Resume Analyzer' },
           { to: '/user/ask-doubt', label: 'Ask Doubt' },
-          { to: 'https://resume-builder-eight-red.vercel.app/', label: 'Resume Building', external: true },
+          { to: '/resume-builder', label: 'Resume Building' },
         ]
     : [
         { to: '/jobs', label: 'Jobs' },
-        { to: 'https://resume-builder-eight-red.vercel.app/', label: 'Resume Building', external: true },
+        { to: '/resume-builder', label: 'Resume Building' },
       ];
 
   const isActivePath = (path) =>

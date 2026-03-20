@@ -18,6 +18,7 @@ import ResumeAnalyzer from './pages/user/ResumeAnalyzer';
 import MyApplications from './pages/user/MyApplications';
 import ScoreReport from './pages/user/ScoreReport';
 import AskDoubt from './pages/user/AskDoubt';
+import ResumeBuilder from './pages/user/ResumeBuilder';
 
 // HR Pages
 import HRDashboard from './pages/hr/HRDashboard';
@@ -122,6 +123,7 @@ const AppContent = () => {
           <Route path="/jobs/:jobId" element={<JobDetails />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/resume-builder" element={<ResumeBuilder />} />
 
           {/* User Dashboard Routes */}
           <Route

@@ -356,7 +356,10 @@ const analyzeResumeDirect = async (req, res) => {
     res.json(data);
   } catch (error) {
     console.error('RAG API error:', error.response?.data || error.message);
-    res.status(500).json({ message: error.response?.data?.detail || error.message });
+    const aiErrorMessage = error.response?.status === 404 
+      ? 'The AI Python Server (RAG API) is unreachable or offline at the URL you provided.'
+      : (error.response?.data?.detail || error.message);
+    res.status(500).json({ message: aiErrorMessage });
   } finally {
     if (tempPath) {
       try { require('fs').unlinkSync(tempPath); } catch (_) { }
