@@ -37,8 +37,12 @@ const Navbar = () => {
           { to: '/jobs', label: 'Jobs' },
           { to: '/user/analyze-resume', label: 'Resume Analyzer' },
           { to: '/user/ask-doubt', label: 'Ask Doubt' },
+          { to: 'https://resume-builder-git-main-codebysumeets-projects.vercel.app/', label: 'Resume Building', external: true },
         ]
-    : [{ to: '/jobs', label: 'Jobs' }];
+    : [
+        { to: '/jobs', label: 'Jobs' },
+        { to: 'https://resume-builder-git-main-codebysumeets-projects.vercel.app/', label: 'Resume Building', external: true },
+      ];
 
   const isActivePath = (path) =>
     location.pathname === path || (path !== '/' && location.pathname.startsWith(path));
@@ -64,6 +68,19 @@ const Navbar = () => {
 
           <div className="hidden items-center gap-1.5 lg:flex">
             {navLinks.map((link) => {
+              if (link.external) {
+                return (
+                  <a
+                    key={link.to}
+                    href={link.to}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full px-3.5 py-2 text-sm font-semibold transition-all text-slate-600 hover:bg-white/45 hover:text-slate-900"
+                  >
+                    {link.label}
+                  </a>
+                );
+              }
               const isActive = isActivePath(link.to);
               return (
                 <Link
@@ -142,6 +159,20 @@ const Navbar = () => {
 
             <div className="flex flex-col gap-2">
               {navLinks.map((link) => {
+                if (link.external) {
+                  return (
+                    <a
+                      key={link.to}
+                      href={link.to}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold transition-all bg-white/80 text-slate-700 hover:bg-amber-50 hover:text-slate-900"
+                    >
+                      <span>{link.label}</span>
+                      <BriefcaseBusiness className="h-4 w-4" />
+                    </a>
+                  );
+                }
                 const isActive = isActivePath(link.to);
                 return (
                   <Link

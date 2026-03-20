@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getStoredUser } from '../utils/authStorage';
 
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://ai-resume-screener-nw47.vercel.app/api' : '/api');
 
 // Create an axios instance
 const api = axios.create({
