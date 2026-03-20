@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/api': {
-          target: "https://ai-resume-screener-nw47.vercel.app/",
+          target: "http://localhost:5000",
           changeOrigin: true,
         },
       },
